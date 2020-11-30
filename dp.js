@@ -245,7 +245,6 @@ async function compile(program) {
 		return new Promise((resolve) => {
 			exec(`g++ ${compileOption} \"${program.src.full}\" -o \"${program.bin.full}\"`, (err) => {
 				if (err) {
-					console.log(err);
 					msg.error(`The compilation of ${program.src.base} fails!`);
 				} else {
 					console.log(`[LOG] the compilation of ${program.src.base} succeeds.`);

@@ -4,18 +4,23 @@ An programming competition tester for the program written by C++ language.
 
 ## Usage
 
-Use the comparator in bash.
-
+The tester can only run in bash(do not support cmd in windows).
 ```shell
-node dp.js testing_program standard_program generator_programs
+node dp.js ${testing_program} ${standard_program} ${generator_program}
 ```
 
-Some options: -exe(-e)
+Some options:
+```shell
+-exe / -e       # Run without compilation
+-spj= / -s=     # Check answers by special judge
+```
 
 ## Feature:
 
 1. Generate data, run the testing program and standard program.
-2. Detect the testing result - Accepted(AC), Wrong Answer(WA), Runtime Error(RE), Time Limit Exceeded(TLE).
+2. Detect the testing result
+   - By the command `diff`: Accepted, Wrong Answer, Runtime Error, Time Limit Exceeded.
+   - By the special judge supported by "testlib.h": in addition to the above, Wrong Output Format, Partially Correct.
 3. Compile programs before testing.
 
 ## TODO
@@ -25,7 +30,6 @@ Some options: -exe(-e)
     - User Interface (including option --help).
 
 - Function
-    - Support special judge(spj) when checking the answer(including whether to use "testlib.h" or not).
     - Pass parameters to data generator.
     - Detect memory limit exceeded(MLE).
     - Allow programs to use standard error stream(stderr).
