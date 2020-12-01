@@ -297,17 +297,18 @@ async function compileProgram() {
 	});
 }
 async function clearProcess() {
+	let command = win32 ? 'taskkill -f -im' : 'killall';
 	return await new Promise.all([
 		new Promise((resolve) => {
-			exec(`taskkill -f -im ${usr.bin.base}`, () => {});
+			exec(`${command} ${usr.bin.base}`, () => {});
 			resolve();
 		}),
 		new Promise((resolve) => {
-			exec(`taskkill -f -im ${std.bin.base}`, () => {});
+			exec(`${command} ${std.bin.base}`, () => {});
 			resolve();
 		}),
 		new Promise((resolve) => {
-			exec(`taskkill -f -im ${gen.bin.base}`, () => {});
+			exec(`${command} ${gen.bin.base}`, () => {});
 			resolve();
 		}),
 	]);
