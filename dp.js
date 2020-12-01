@@ -7,6 +7,10 @@ const execFileSync = require('child_process').execFileSync;
 const read = require('readline-sync');
 const Promise = require('bluebird');
 
+// project information
+const version = '1.0';
+const github = 'https://github.com/SiyuanQAQ/tester';
+
 // basic configuration
 const win32 = (process.platform == 'win32');
 const pwd = (() => {
@@ -17,6 +21,7 @@ const path = {
 	src: pwd,
 	bin: pwd + '/test'
 };
+const filename = require.main.filename.replace(/\\/g, '/').split('/').pop();
 
 // user configuration
 const defaultCompileOption = '-g -Wall -Wextra -ftrapv -std=c++11 -O2' + (win32 ? ' -Wl,--stack=536870912' : '');
@@ -53,36 +58,52 @@ const fmt = {
 	},
 };
 const msg = {
-	echo(content, { exit = false } = {}) {
-		console.log(content);
-		if (exit) {
-			process.exit(1);
+	error(err, { help = false } = {}) {
+		console.log(`\n\n\n${style.wWhite}${style.gRed}Error: ${err}${style.sReset}`);
+		if (help) {
+			console.log(`Use \"--help\" for more information.`);
 		}
-	},
-	error(err) {
-		msg.echo(`\n\n\n${style.wWhite}${style.gRed}Error: ${err}${style.sReset}`, { exit: true });
+		process.exit(1);
 	},
 	AC(time1, time2) {
-		msg.echo(`${style.wGreen}Accepted${style.sReset} | ${fmt.time(time1, time2)}`);
+		console.log(`${style.wGreen}Accepted${style.sReset} | ${fmt.time(time1, time2)}`);
 	},
 	PC(time1, time2, point, err) {
-		msg.echo(`${style.wGreen}Partially Correct${style.sReset} | Points: ${point} | ${fmt.time(time1, time2)} | ${fmt.error(err)}`);
+		console.log(`${style.wGreen}Partially Correct${style.sReset} | Points: ${point} | ${fmt.time(time1, time2)} | ${fmt.error(err)}`);
 	},
 	WA(err) {
-		msg.echo(`${style.wRed}Wrong Answer${style.sReset} | ${fmt.error(err)}`, { exit: true });
+		console.log(`${style.wRed}Wrong Answer${style.sReset} | ${fmt.error(err)}`);
+		process.exit(1);
 	},
 	WF(err) {
-		msg.echo(`${style.wRed}Wrong Output Format${style.sReset} | ${fmt.error(err)}`, { exit: true });
+		console.log(`${style.wRed}Wrong Output Format${style.sReset} | ${fmt.error(err)}`);
+		process.exit(1);
 	},
 	TLE() {
-		msg.echo(`${style.wBlue}Time Limit Exceeded${style.sReset}`, { exit: true });
+		console.log(`${style.wBlue}Time Limit Exceeded${style.sReset}`);
+		process.exit(1);
 	},
 	RE() {
-		msg.echo(`${style.wYellow}Runtime Error${style.sReset}`, { exit: true });
+		console.log(`${style.wYellow}Runtime Error${style.sReset}`);
+		process.exit(1);
 	},
 	MLE() {
-		msg.echo(`${style.wMagenta}Memory Limit Exceeded${style.sReset}`, { exit: true });
-	}
+		console.log(`${style.wMagenta}Memory Limit Exceeded${style.sReset}`);
+		process.exit(1);
+	},
+	help() {
+		console.log(`Usage: node [tester.js] [testing] [standard] [generator] [options]`);
+		console.log();
+		console.log('Options:');
+		console.log('    -e, --exe            Run programs without compilation (make sure the executable file exists)');
+		console.log('    -s, --spj=...        Check answers by special judge (use \"testlib.h\")');
+	},
+	version() {
+		console.log(`${style.sBidge}Tester${style.sReset}: An programming competition tester for the program written by C++ language.`);
+		console.log(`    version: ${version}`);
+		console.log('    author: Siyuan');
+		console.log(`    github: ${github}`);
+	},
 };
 
 // classes
@@ -152,10 +173,18 @@ async function checkSystem() {
 	});
 }
 async function getArgv() {
+	let argv = process.argv.splice(2);
+	if (argv.length > 0 && (argv[0] == '-h' || argv[0] == '--help')) {
+		msg.help();
+		process.exit(0);
+	}
+	if (argv.length > 0 && (argv[0] == '-v' || argv[0] == '--version')) {
+		msg.version();
+		process.exit(0);
+	}
 	return await new Promise((resolve) => {
-		let argv = process.argv.splice(2);
 		if (argv.length < 3) {
-			msg.error(`The number of parameters must be at least 3, but only ${argv.length} are found!`);
+			msg.error(`The number of parameters must be at least 3, but only ${argv.length} are found!`, { help: true });
 		}
 		usr = new Program(argv[0] + '.cpp', 'usr');
 		std = new Program(argv[1] + '.cpp', 'std');
@@ -165,10 +194,10 @@ async function getArgv() {
 		genShell = new Shell('gen.sh');
 		argv.splice(0, 3);
 		for (let i of argv) {
-			if (i == '-e' || i == '-exe') {
+			if (i == '-e' || i == '--exe') {
 				needCompile = false;
 			}
-			if (i.substr(0, 3) == '-s=' || i.substr(0, 5) == '-spj=') {
+			if (i.substr(0, 3) == '-s=' || i.substr(0, 5) == '--spj=') {
 				if (needSpecial) {
 					msg.error('The special judge is redeclared!');
 				}
