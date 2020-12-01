@@ -266,20 +266,14 @@ async function getCustomOption() {
 	})
 }
 async function compile(program) {
-	return await new Promise((resolve) => {
-		readable(program.src.full).then(() => {
-			resolve();
-		})
-	}).then(() => {
-		return new Promise((resolve) => {
-			exec(`g++ ${compileOption} \"${program.src.full}\" -o \"${program.bin.full}\"`, (err) => {
-				if (err) {
-					msg.error(`The compilation of ${program.src.base} fails!`);
-				} else {
-					console.log(`[LOG] the compilation of ${program.src.base} succeeds.`);
-					resolve();
-				}
-			});
+	return new Promise((resolve) => {
+		exec(`g++ ${compileOption} \"${program.src.full}\" -o \"${program.bin.full}\"`, (err) => {
+			if (err) {
+				msg.error(`The compilation of ${program.src.base} fails!`);
+			} else {
+				console.log(`[LOG] the compilation of ${program.src.base} succeeds.`);
+				resolve();
+			}
 		});
 	});
 }

@@ -11,8 +11,8 @@ node [tester.js] [testing] [standard] [generator] [options]
 
 Options:
 ```shell
--e, --exe			# Run programs without compilation
--s, --spj=...		# Check answers by special judge
+-e, --exe           # Run programs without compilation
+-s, --spj=...       # Check answers by special judge
 ```
 
 Example:
@@ -33,18 +33,18 @@ node test.js usr std gen
 ## TODO
 
 - Performance
-	- Speed up.
-	- User Interface.
+  - Speed up.
+  - User Interface.
 
 - Function
-	- Pass parameters to data generator.
-	- Detect memory limit exceeded (MLE).
-	- Allow programs to use standard error stream (stderr).
-	- Batch testing data.
-	- Print compile log when compilation error.
+  - Pass parameters to data generator.
+  - Detect memory limit exceeded (MLE).
+  - Allow programs to use standard error stream (stderr).
+  - Batch testing data.
+  - Print compile log when compilation error.
 
 - Reliability
-	- Check readability, writability and executability.
-	- Identify absolute path and file extension in parameters.
+  - Check readability, writability and executability.
+  - Identify absolute path and file extension in parameters.
 
 ~~Goal: defeat chc_1234567890's duipai.exe, not including speed :(~~
