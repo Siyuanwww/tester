@@ -320,9 +320,9 @@ async function execute(binary, shell, timeLimit) {
 			let endTime = new Date().getTime();
 			if (err) {
 				if (err.signal == 'SIGKILL') {
-					binary.type == 'usr' ? msg.TLE() : msg.error(`Time limit exceeded occurs in ${program.src.base}!`);
+					binary.type == 'usr' ? msg.TLE() : msg.error(`Time limit exceeded occurs in ${binary.base}!`);
 				} else {
-					binary.type == 'usr' ? msg.RE() : msg.error(`Runtime error occurs in ${program.src.base}!`);
+					binary.type == 'usr' ? msg.RE() : msg.error(`Runtime error occurs in ${binary.base}!`);
 				}
 			}
 			resolve(endTime - startTime);
@@ -362,22 +362,20 @@ async function checkAnswerByCommand(stdTime, usrTime) {
 	return await new Promise((resolve) => {
 		exec(`diff ${ouf.full} ${ans.full}`, (err) => {
 			err ? msg.WA() : msg.AC(stdTime, usrTime);
+			resolve();
 		});
-		resolve();
 	});
 }
 async function checkAnswer(stdTime, usrTime) {
-	if (needSpecial) {
-		return new Promise(async (resolve) => {
+	return await new Promise(async (resolve) => {
+		if (needSpecial) {
 			await checkAnswerBySpecial(stdTime, usrTime);
 			resolve();
-		});
-	} else {
-		return new Promise(async (resolve) => {
+		} else {
 			await checkAnswerByCommand(stdTime, usrTime);
 			resolve();
-		});
-	}
+		}
+	});
 }
 async function executeProgram() {
 	return await new Promise(async (resolve) => {
