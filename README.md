@@ -1,15 +1,17 @@
 # Tester
 
-An programming competition tester for the program written by C++ language.
+A programming competition tester for the program written by C++ language.
 
 ## Usage
 
 The tester can only run in bash (do not support `cmd.exe` in windows).
+
 ```shell
 node [tester.js] [testing] [standard] [generator] [options]
 ```
 
 Options:
+
 ```shell
 -e, --exe           # Run programs without compilation
 -s, --spj=...       # Check answers by special judge
@@ -18,11 +20,12 @@ Options:
 Example:
 
 If there is `usr.cpp`, `std.cpp` and `gen.cpp` in the current directory, then input the following command to run the tester `test.js`:
+
 ```shell
 node test.js usr std gen
 ```
 
-## Feature:
+## Feature
 
 1. Generate data, run the testing program and standard program.
 2. Detect the testing result
